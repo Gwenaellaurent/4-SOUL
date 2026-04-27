@@ -11,15 +11,60 @@
     <script>
       var unityInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {onProgress: UnityProgress});
     </script>
+
+    <!-- AJOUT DU STYLE ICI -->
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+      }
+      
+      .webgl-content {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Force le canvas à prendre tout l'écran */
+      #unityContainer {
+        width: 100vw !important;
+        height: 100vh !important;
+      }
+
+      /* Masque le footer Unity par défaut pour gagner de la place */
+      .footer { display: none; }
+
+      /* Rotation pour Mobile Portrait */
+      @media screen and (orientation: portrait) and (max-width: 1024px) {
+        #unityContainer {
+          transform: rotate(90deg);
+          transform-origin: bottom left;
+          position: absolute;
+          top: -100vw;
+          left: 0;
+          height: 100vw !important;
+          width: 100vh !important;
+        }
+      }
+    </style>
   </head>
+  
   <body>
     <div class="webgl-content">
-      <div id="unityContainer" style="width: 960px; height: 600px"></div>
-      <div class="footer">
-        <div class="webgl-logo"></div>
-        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
-        <div class="title">Existential Achetypes</div>
-      </div>
+      <!-- Suppression du style fixe (960x600) ici -->
+      <div id="unityContainer"></div>
     </div>
+
+    <!-- Script pour activer le plein écran au premier clic -->
+    <script>
+      document.addEventListener("click", function() {
+        if (unityInstance) {
+          unityInstance.SetFullscreen(1);
+        }
+      }, { once: true });
+    </script>
   </body>
 </html>
