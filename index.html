@@ -34,8 +34,24 @@
       }
     </style>
     <script>
-      // Assurez-vous que le chemin vers votre .json est correct
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json");
+    // 1. On neutralise la fonction d'alerte du navigateur
+    // Unity utilise souvent 'window.alert' ou 'confirm' pour ce message
+    var originalAlert = window.alert;
+    window.alert = function(message) {
+      if (message.indexOf("WebGL") !== -1 || message.indexOf("compatibility") !== -1) {
+        console.log("Alerte Unity bloquée : " + message);
+        return true; 
+      }
+      return originalAlert(message);
+    };
+  
+    // 2. On force le système Unity à croire qu'il n'est pas sur mobile
+    if (typeof UnityLoader !== "undefined" && UnityLoader.SystemInfo) {
+      UnityLoader.SystemInfo.mobile = false;
+    }
+  
+    // 3. Ton appel habituel
+    var unityInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json");
     </script>
   </head>
 
