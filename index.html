@@ -270,16 +270,12 @@
         <img src="TemplateData/background_compressed.png" id="loading-bg">
         
         <div id="ui-container">
-            <h2 style="margin-top:0; color:#00ffcc;">IDENTIFICATION</h2>
+            <h2 style="margin-top:0; color:#00ffcc;">Existential Archetype</h2>
+            <p id="loading-status">Initialisation...</p>
             
             <div class="field-group">
-                <label>NOM D'ÂME</label>
-                <input type="text" id="username" placeholder="Pseudo...">
-            </div>
-
-            <div class="field-group">
-                <label>DATE DE NAISSANCE</label>
-                <input type="date" id="birthdate">
+                <label>NOM</label>
+                <input type="text" id="username" placeholder="">
             </div>
 
             <div class="field-group">
@@ -289,6 +285,11 @@
                     <option value="Femme">Femme</option>
                     <option value="Autre">Autre</option>
                 </select>
+            </div>
+          
+            <div class="field-group">
+                <label>DATE DE NAISSANCE</label>
+                <input type="date" id="birthdate">
             </div>
 
             <p id="loading-status" style="font-size: 0.7em;">Chargement du moteur...</p>
