@@ -64,142 +64,147 @@
 
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Unity WebGL Player | Existential Archetypes</title>
-    <script src="TemplateData/UnityProgress.js"></script>
+    <title>Unity WebGL | Existential Archetypes</title>
     <script src="Build/UnityLoader.js"></script>
     <style>
-      /* Styles existants */
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        height: 100dvh;
-        overflow: hidden;
-        background: black;
-        font-family: sans-serif;
-      }
+        /* 1. Reset et plein écran dynamique */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            background: #000;
+            font-family: sans-serif;
+        }
 
-      #unityContainer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100%;
-        height: 100dvh;
-      }
-      
-      canvas {
-        width: 100% !important;
-        height: 100% !important;
-      }
+        /* 2. L'Overlay de chargement personnalisé */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            background-color: #000;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-      /* --- NOUVEAU STYLE POUR L'OVERLAY --- */
-      #loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* REMPLACEZ L'URL CI-DESSOUS PAR VOTRE IMAGE */
-        background: url('TemplateDate/background_compressed.png') no-repeat center center;
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999; /* Devant Unity */
-        transition: opacity 0.8s ease;
-      }
+        /* L'image de fond */
+        #loading-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.7; /* Pour mieux voir le texte par-dessus */
+        }
 
-      .form-container {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 30px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        min-width: 280px;
-      }
+        /* Le formulaire au centre */
+        #ui-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            color: white;
+        }
 
-      .form-container input {
-        width: 90%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            margin: 10px 0;
+            width: 80%;
+        }
 
-      .form-container button {
-        background: #222;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 16px;
-      }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-      .form-container button:hover {
-        background: #444;
-      }
+        /* 3. Le conteneur Unity */
+        #unityContainer {
+            width: 100vw;
+            height: 100dvh;
+        }
     </style>
+</head>
 
-    <script>
-    // Neutralisation des alertes
-    var originalAlert = window.alert;
-    window.alert = function(message) {
-      if (message.indexOf("WebGL") !== -1 || message.indexOf("compatibility") !== -1) {
-        console.log("Alerte Unity bloquée : " + message);
-        return true; 
-      }
-      return originalAlert(message);
-    };
-  
-    // Forçage non-mobile
-    if (typeof UnityLoader !== "undefined" && UnityLoader.SystemInfo) {
-      UnityLoader.SystemInfo.mobile = false;
-    }
-  
-    // Instance Unity
-    var unityInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json");
-
-    // --- FONCTION POUR FERMER L'OVERLAY ---
-    function startApp() {
-      var overlay = document.getElementById('loading-overlay');
-      var name = document.getElementById('userInput').value;
-
-      if(name.trim() === "") {
-        alert("Please enter a name to continue.");
-        return;
-      }
-
-      // Effet de disparition
-      overlay.style.opacity = '0';
-      setTimeout(function() {
-        overlay.style.display = 'none';
-      }, 800);
-
-      console.log("Starting for user: " + name);
-      // Optionnel : Envoyer le nom à Unity
-      // unityInstance.SendMessage('NomDuGameObject', 'MethodeReception', name);
-    }
-    </script>
-  </head>
-
-  <body>
-    <!-- NOUVEL OVERLAY -->
+<body>
+    <!-- OVERLAY VISUEL -->
     <div id="loading-overlay">
-      <div class="form-container">
-        <h2>Existential Archetypes</h2>
-        <input type="text" id="userInput" placeholder="Enter your name...">
-        <br>
-        <button onclick="startApp()">Continuer</button>
-      </div>
+        <!-- Vérifie bien le nom exact ici : TemplateData/... -->
+        <img src="TemplateData/background_compressed.png" id="loading-bg">
+        
+        <div id="ui-container">
+            <h2>Existential Archetypes</h2>
+            <label for="username">Choisissez votre nom d'âme :</label><br>
+            <input type="text" id="username" placeholder="Votre nom..."><br>
+            
+            <p id="loading-status">Initialisation du moteur...</p>
+            
+            <!-- Ce bouton sera caché au début et s'affichera à 100% -->
+            <button id="start-button" style="display:none;" onclick="closeOverlay()">COMMENCER</button>
+        </div>
     </div>
 
-    <!-- CONTENEUR UNITY -->
+    <!-- JEU WEBGL -->
     <div id="unityContainer"></div>
-  </body>
+
+    <script>
+        // A. BLOCAGE DE L'ALERTE MOBILE (Anti-Pop-up WebGL)
+        window.alert = (function(oldAlert) {
+            return function(msg) {
+                if (msg.indexOf("WebGL") !== -1 || msg.indexOf("compatibility") !== -1) {
+                    console.log("Unity Alert Blocked: " + msg);
+                } else {
+                    oldAlert(msg);
+                }
+            };
+        })(window.alert);
+
+        // B. CHARGEMENT UNITY
+        var gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
+            onProgress: function(instance, progress) {
+                var statusText = document.getElementById("loading-status");
+                var startBtn = document.getElementById("start-button");
+                
+                if (progress < 1) {
+                    statusText.innerHTML = "Chargement des consciences : " + Math.round(progress * 100) + "%";
+                } else {
+                    statusText.innerHTML = "Liaison établie !";
+                    startBtn.style.display = "inline-block"; // On montre le bouton quand c'est prêt
+                }
+            }
+        });
+
+        // C. FONCTION POUR FERMER L'OVERLAY
+        function closeOverlay() {
+            var name = document.getElementById("username").value;
+            if (name === "") {
+                alert("Veuillez entrer un nom pour continuer.");
+                return;
+            }
+            // Tu peux envoyer le nom à Unity ici si besoin :
+            // gameInstance.SendMessage('NomDeTonObjet', 'MethodeReception', name);
+            
+            document.getElementById("loading-overlay").style.display = "none";
+        }
+    </script>
+</body>
 </html>
