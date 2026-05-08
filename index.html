@@ -196,7 +196,7 @@
 -->
 
 
-
+<!--
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -270,16 +270,15 @@
         <img src="TemplateData/background_compressed.png" id="loading-bg">
         
         <div id="ui-container">
-            <h2 style="margin-top:0; color:#00ffcc;">Existential Archetype</h2>
-            <p id="loading-status">Initialisation...</p>
-            
+            <h2 style="margin-top:0; color:#00ffcc;">What kind of soul are you?</h2>
+          
             <div class="field-group">
-                <label>NOM</label>
+                <label>NAME</label>
                 <input type="text" id="username" placeholder="">
             </div>
 
             <div class="field-group">
-                <label>GENRE</label>
+                <label>GENDER</label>
                 <select id="gender">
                     <option value="Homme">Homme</option>
                     <option value="Femme">Femme</option>
@@ -288,12 +287,12 @@
             </div>
           
             <div class="field-group">
-                <label>DATE DE NAISSANCE</label>
+                <label>BIRTHDAY</label>
                 <input type="date" id="birthdate">
             </div>
 
-            <p id="loading-status" style="font-size: 0.7em;">Chargement du moteur...</p>
-            <button id="start-button" style="display:none;" onclick="launchGame()">ENTRER DANS L'ABYSS</button>
+            <p id="loading-status">Initialisation...</p>
+            <button id="start-button" style="display:none;" onclick="launchGame()">ENTER THE ABYSS</button>
         </div>
     </div>
 
@@ -327,27 +326,17 @@
         // 3. Envoyer les données et lancer
         function launchGame() {
             var user = document.getElementById("username").value;
-            var birth = document.getElementById("birthdate").value;
             var gen = document.getElementById("gender").value;
+            var birth = document.getElementById("birthdate").value;
 
             if (!user || !birth) {
                 console.log("Formulaire incomplet");
                 return;
             }
 
-            // Préparation des données (format JSON simple)
-            var userData = {
-                username: user,
-                birthdate: birth,
-                gender: gen
-            };
-            var jsonString = JSON.stringify(userData);
-
-            // ENVOI À UNITY
-            // Paramètre 1 : Le nom du GameObject dans ta scène Unity
-            // Paramètre 2 : Le nom de la fonction publique dans ton script C#
-            // Paramètre 3 : La donnée (le JSON)
-            gameInstance.SendMessage('ReceiverObject', 'ReceiveUserData', jsonString);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveName', user);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveGender', gen);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', birth);
 
             // On réactive la capture clavier pour le jeu si nécessaire
             if (typeof WebGLInput !== "undefined") {
@@ -363,8 +352,6 @@
 -->
 
 
-
-<!-- OVERLAY MINIMALIST AVEC PLEIN ECRAN
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -427,7 +414,7 @@
 
         button#start-button {
             width: 100%;
-            padding: 15px;
+            padding: 5px;
             background: #fff;
             color: #000;
             border: none;
@@ -506,15 +493,16 @@
         // 3. Envoi des données et lancement
         function launchGame() {
             var user = document.getElementById("username").value;
-            var birth = document.getElementById("birthdate").value;
             var gen = document.getElementById("gender").value;
+            var birth = document.getElementById("birthdate").value;
 
             if (!user || !birth || !gen) {
                 return;
             }
 
-            var jsonString = JSON.stringify({username: user, birthdate: birth, gender: gen});
-            gameInstance.SendMessage('ReceiverObject', 'ReceiveUserData', jsonString);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveName', user);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveGender', gen);
+            gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', birth);
 
             if (typeof WebGLInput !== "undefined") WebGLInput.captureAllKeyboardInput = true;
             document.getElementById("loading-overlay").style.display = "none";
@@ -537,4 +525,3 @@
     </script>
 </body>
 </html>
--->
