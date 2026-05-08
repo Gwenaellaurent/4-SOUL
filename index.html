@@ -1,4 +1,4 @@
-<!--
+<!-- VERSION MNIMALISTE
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -62,7 +62,7 @@
 </html>
 -->
 
-<!--
+
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -130,6 +130,12 @@
             <p id="loading-status">Initialisation...</p>
             
             <input type="text" id="username" placeholder="Entrez votre nom...">
+            <input type="date" id="birthdate">
+            <select id="gender">
+              <option value="Homme">Homme</option>
+              <option value="Femme">Femme</option>
+              <option value="Autre">Autre</option>
+            </select>          
             <br>
             <button id="start-button" style="display:none;" onclick="launchGame()">ENTRER DANS L'ABYSS</button>
         </div>
@@ -157,6 +163,10 @@
                 if (progress >= 1) {
                     status.innerHTML = "Liaison prête !";
                     btn.style.setProperty('display', 'inline-block', 'important');
+                    // DESACTIVER LA CAPTURE CLAVIER pour laisser le formulaire fonctionner
+                    if (typeof WebGLInput !== "undefined") {
+                        WebGLInput.captureAllKeyboardInput = false;
+                    }
                 }
             }
         });
@@ -170,6 +180,11 @@
                 if (!name) return;
                 document.getElementById("username").value = name;
             }
+
+            // On réactive la capture clavier pour le jeu si nécessaire
+            if (typeof WebGLInput !== "undefined") {
+                WebGLInput.captureAllKeyboardInput = true;
+            }
             
             // On cache l'overlay
             document.getElementById("loading-overlay").style.display = "none";
@@ -178,10 +193,10 @@
     </script>
 </body>
 </html>
--->
 
 
-<!--
+
+
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -343,6 +358,7 @@
 
 
 
+<!--
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -458,7 +474,7 @@
         </div>
     </div>
 
-    <!-- Bouton Plein Écran -->
+    // Bouton Plein Écran
     <button id="fs-button" onclick="toggleFullScreen()">FULLSCREEN</button>
 
     <div id="unityContainer"></div>
@@ -515,3 +531,4 @@
     </script>
 </body>
 </html>
+-->
