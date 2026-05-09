@@ -570,6 +570,21 @@
             font-size: 16px; box-sizing: border-box;
         }
 
+      /* Couleur grise quand aucune option valide n'est choisie */
+        select:invalid {
+            color: gray;
+        }
+        
+        /* Couleur blanche dès qu'une option est sélectionnée */
+        select:valid {
+            color: white;
+        }
+        
+        /* On remet les options en noir pour qu'elles soient lisibles dans la liste */
+        option {
+            color: black;
+        }
+
         button {
             width: 100%; padding: 15px; margin-top: 15px;
             background: #fff; color: #000; border: none; font-weight: bold;
@@ -609,7 +624,7 @@
         <img src="TemplateData/background_compressed.png" id="loading-bg">
         <div id="ui-container">
             <!--<input type="text" id="username" placeholder="NOM D'ÂME">-->
-            <select id="nationality">
+            <select id="nationality" required>
               <option value="" disabled selected>Nationality</option>
               <option>select country</option>
               <option value="AF">Afghanistan</option>
@@ -809,7 +824,7 @@
               <option value="ZW">Zimbabwe</option>
               <option value="ZW">Other</option>
             </select>
-            <select id="gender">
+            <select id="gender" required>
                 <option value="" disabled selected>Gender</option>
                 <option value="Homme">Male</option>
                 <option value="Femme">Female</option>
