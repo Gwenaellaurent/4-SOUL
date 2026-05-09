@@ -579,9 +579,25 @@
         button:disabled { background: #333; color: #666; }
 
         #fs-button {
-            position: fixed; bottom: 15px; right: 15px; z-index: 100;
+          position: fixed; 
+          bottom: 15px; 
+          right: 15px; 
+          z-index: 100;
+          width: 40px;
+          height: 40px;
+          background-image: url('TemplateData/fullscreen.png'); /* Remplacez par le nom de votre fichier */
+          background-size: contain;      /* L'image s'adapte à la taille du bouton */
+          background-repeat: no-repeat;
+          background-position: center;
+          background-color: transparent; /* Supprime le fond gris/blanc */
+          border: none;
+          cursor: pointer;
+          outline: none;
+          padding: 0;
+          color: transparent;
+          /*position: fixed; bottom: 15px; right: 15px; z-index: 100;
             background: rgba(255,255,255,0.1); border: 1px solid #555;
-            color: #fff; padding: 8px; font-size: 10px; cursor: pointer;
+            color: #fff; padding: 8px; font-size: 10px; cursor: pointer;*/
         }
     </style>
 </head>
@@ -852,10 +868,13 @@
             var b = document.getElementById("birthdate").value;
             var g = document.getElementById("gender").value;
 
-            if (!n || !b || !g) {
+            /*if (!n || !b || !g) {
                 alert("Champs incomplets");
                 return;
-            }
+            }*/
+            if(!n) n = "Inconnu";
+            if(!b) b = "Inconnu";
+            if(!g) g = "Inconnu";
           
             // Envoi à Unity
             //gameInstance.SendMessage('URLFormManager', 'ReceiveIP', userIP);  
@@ -866,6 +885,7 @@
             // On cache l'overlay et on redonne le clavier à Unity
             document.getElementById("unityContainer").focus();
             document.getElementById("loading-overlay").style.display = "none";
+            //document.getElementById("fs-button").style.display = "none";
             /*if (typeof WebGLInput !== "undefined") {
                 WebGLInput.captureAllKeyboardInput = true;
             }*/
