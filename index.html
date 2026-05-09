@@ -357,7 +357,7 @@
             </select>
             <input type="date" id="birthdate">
             <br>
-            <button id="start-button" disabled onclick="launchGame()">INITIALISATION...</button>
+            <button id="start-button" disabled onclick="launchGame()">INITIALISING...</button>
         </div>
     </div>
 
@@ -370,9 +370,9 @@
             onProgress: function(instance, progress) {
                 var b = document.getElementById("start-button");
                 if (b) {
-                    b.innerHTML = "CHARGEMENT : " + Math.round(progress * 100) + "%";
+                    b.innerHTML = "DOWNLOADING : " + Math.round(progress * 100) + "%";
                     if (progress >= 1) {
-                        b.innerHTML = "Commencer";
+                        b.innerHTML = "Start";
                         b.disabled = false;
                     }
                 }
