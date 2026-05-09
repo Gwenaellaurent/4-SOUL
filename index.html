@@ -864,7 +864,7 @@
             gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', b);
 
             // On cache l'overlay et on redonne le clavier à Unity
-            document.getElementById("canvas").focus();
+            document.getElementById("unityContainer").focus();
             document.getElementById("loading-overlay").style.display = "none";
             /*if (typeof WebGLInput !== "undefined") {
                 WebGLInput.captureAllKeyboardInput = true;
