@@ -363,9 +363,9 @@
     <button id="fs-button" onclick="toggleFullScreen()"></button>
 
     <script>
-        // On désactive immédiatement l'interception de Unity
-        window.onload = function() {
-          gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
+    // On désactive immédiatement l'interception de Unity
+    window.onload = function() {
+        gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
             onProgress: function(instance, progress) {
                 var b = document.getElementById("start-button");
                 if (b) {
@@ -376,8 +376,8 @@
                     }
                 }
             }
-          }
         });
+    };
 
 
       // On collecte la variable IP
