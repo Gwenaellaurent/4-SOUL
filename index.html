@@ -365,22 +365,26 @@
     <script>
       
     // On désactive immédiatement l'interception de Unity
-    window.addEventListener('load', function() {
-    // Petit délai de 200ms pour laisser le mobile respirer
-      setTimeout(function() {
-          gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
-              onProgress: function(instance, progress) {
-                  var b = document.getElementById("start-button");
-                  if (b) {
-                      b.innerHTML = "CHARGEMENT : " + Math.round(progress * 100) + "%";
-                      if (progress >= 1) {
-                          b.innerHTML = "Commencer";
-                          b.disabled = false;
-                      }
-                  }
-              }
-          });
-      }, 1000);
+    var gameInstance = null;
+    function startUnity() {
+        console.log("Lancement de Unity...");
+        gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
+            onProgress: function(instance, progress) {
+                var b = document.getElementById("start-button");
+                if (b) {
+                    b.innerHTML = "DOWNLOADING : " + Math.round(progress * 100) + "%";
+                    if (progress >= 1) {
+                        b.innerHTML = "Start";
+                        b.disabled = false;
+                    }
+                }
+            }
+        });
+    }
+
+    // ON APPELLE startUnity ICI
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(startUnity, 500);
     });
     
     /*window.onload = function() {
