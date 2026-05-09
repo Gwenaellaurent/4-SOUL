@@ -80,9 +80,10 @@
 
         /* L'overlay est une simple couche noire par-dessus */
         #loading-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            touch-action: none;
         }
 
         #loading-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; z-index: -1; }
@@ -125,7 +126,7 @@
           z-index: 100;
           width: 40px;
           height: 40px;
-          background-image: url('TemplateData/fullscreen.png'); /* Remplacez par le nom de votre fichier */
+          /* background-image: url('TemplateData/fullscreen.png'); /* Remplacez par le nom de votre fichier */
           background-size: contain;      /* L'image s'adapte à la taille du bouton */
           background-repeat: no-repeat;
           background-position: center;
@@ -425,6 +426,7 @@
             gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', b);
 
             // On cache l'overlay et on redonne le clavier à Unity
+            window.focus();
             document.getElementById("unityContainer").focus();
             document.getElementById("loading-overlay").style.display = "none";
             //document.getElementById("fs-button").style.display = "none";
