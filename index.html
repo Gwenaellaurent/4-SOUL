@@ -130,12 +130,13 @@
             <p id="loading-status">Initialisation...</p>
             
             <input type="text" id="username" placeholder="Entrez votre nom...">
-            <input type="date" id="birthdate">
             <select id="gender">
               <option value="Homme">Homme</option>
               <option value="Femme">Femme</option>
               <option value="Autre">Autre</option>
-            </select>          
+            </select> 
+            <input type="date" id="birthdate">
+         
             <br>
             <button id="start-button" style="display:none;" onclick="launchGame()">ENTRER DANS L'ABYSS</button>
         </div>
@@ -426,11 +427,11 @@
             letter-spacing: 1px;
         }
 
-        button { 
+        /*button { 
             padding: 12px 25px; background: #4CAF50; color: white; 
             border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
-        }
-        /* button:disabled { background: #333; color: #666; } */
+        }*/
+        button:disabled { background: #333; color: #666; }
 
         /* Bouton Plein Écran en bas à droite */
         #fs-button {
@@ -466,7 +467,7 @@
                 <option value="Autre">Autre</option>
             </select>
 
-            <p id="loading-status">Initialisation...</p>
+            <p id="loading-status">Initialization...</p>
             <button id="start-button" style="display:none;" onclick="launchGame()">ENTER THE ABYSS</button>
             <!-- <p id="loading-status" style="color: #666; font-size: 11px; margin-top: 20px;">CHARGEMENT...</p>
             //<button id="start-button" disabled onclick="launchGame()">COMMENCER</button> -->
