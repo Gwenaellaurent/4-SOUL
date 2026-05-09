@@ -381,7 +381,7 @@
       }
       
       // On désactive immédiatement l'interception de Unity
-      var gameInstance = null;
+      /*var gameInstance = null;
       function startUnity() {
           console.log("Lancement de Unity...");
           gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
@@ -401,9 +401,9 @@
       // ON APPELLE startUnity ICI
       window.addEventListener('DOMContentLoaded', function() {
           setTimeout(startUnity, 500);
-      });
+      });*/
     
-    /*window.onload = function() {
+    window.onload = function() {
         gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
             onProgress: function(instance, progress) {
                 var b = document.getElementById("start-button");
@@ -416,7 +416,7 @@
                 }
             }
         });
-      };*/
+      };
 
       // On collecte la variable IP
         /*var userIP = "Inconnue"; 
