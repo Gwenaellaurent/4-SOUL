@@ -79,7 +79,7 @@
 
         /* L'overlay est une simple couche noire par-dessus */
         #loading-overlay {
-            position: fixed; top: 0; left: 0; width: 99%; height: 99%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             touch-action: none;
@@ -363,29 +363,45 @@
     <button id="fs-button" onclick="toggleFullScreen()"></button>
 
     <script>
-      
-    // On désactive immédiatement l'interception de Unity
-    var gameInstance = null;
-    function startUnity() {
-        console.log("Lancement de Unity...");
-        gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
-            onProgress: function(instance, progress) {
-                var b = document.getElementById("start-button");
-                if (b) {
-                    b.innerHTML = "DOWNLOADING : " + Math.round(progress * 100) + "%";
-                    if (progress >= 1) {
-                        b.innerHTML = "Start";
-                        b.disabled = false;
-                    }
-                }
-            }
-        });
-    }
 
-    // ON APPELLE startUnity ICI
-    window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(startUnity, 500);
-    });
+      // On neutralise la fonction d'alerte du navigateur
+      // Unity utilise souvent 'window.alert' ou 'confirm' pour ce message
+      var originalAlert = window.alert;
+      window.alert = function(message) {
+        if (message.indexOf("WebGL") !== -1 || message.indexOf("compatibility") !== -1) {
+          console.log("Alerte Unity bloquée : " + message);
+          return true; 
+        }
+        return originalAlert(message);
+      };
+    
+      // On force le système Unity à croire qu'il n'est pas sur mobile
+      if (typeof UnityLoader !== "undefined" && UnityLoader.SystemInfo) {
+        UnityLoader.SystemInfo.mobile = false;
+      }
+      
+      // On désactive immédiatement l'interception de Unity
+      var gameInstance = null;
+      function startUnity() {
+          console.log("Lancement de Unity...");
+          gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
+              onProgress: function(instance, progress) {
+                  var b = document.getElementById("start-button");
+                  if (b) {
+                      b.innerHTML = "DOWNLOADING : " + Math.round(progress * 100) + "%";
+                      if (progress >= 1) {
+                          b.innerHTML = "Start";
+                          b.disabled = false;
+                      }
+                  }
+              }
+          });
+      }
+  
+      // ON APPELLE startUnity ICI
+      window.addEventListener('DOMContentLoaded', function() {
+          setTimeout(startUnity, 500);
+      });
     
     /*window.onload = function() {
         gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
@@ -400,8 +416,7 @@
                 }
             }
         });
-    };*/
-
+      };*/
 
       // On collecte la variable IP
         /*var userIP = "Inconnue"; 
