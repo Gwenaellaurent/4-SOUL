@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -59,12 +60,11 @@
     <div id="unityContainer"></div>
   </body>
 </html>
+-->
 
 
 
 
-
-<!--
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -364,17 +364,20 @@
 
     <script>
         // On désactive immédiatement l'interception de Unity
-        var gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
+        window.onload = function() {
+          gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
             onProgress: function(instance, progress) {
-                //var s = document.getElementById("status");
                 var b = document.getElementById("start-button");
-                b.innerHTML = "CHARGEMENT : " + Math.round(progress * 100) + "%";
-                if (progress >= 1) {
-                    b.innerHTML = "Commencer";
-                    b.disabled = false;
-                }
+                if (b) {
+                    b.innerHTML = "CHARGEMENT : " + Math.round(progress * 100) + "%";
+                    if (progress >= 1) {
+                        b.innerHTML = "Commencer";
+                        b.disabled = false;
+                    }
             }
+          }
         });
+
 
       // On collecte la variable IP
         /*var userIP = "Inconnue"; 
@@ -439,4 +442,3 @@
     </script>
 </body>
 </html>
--->
