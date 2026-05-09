@@ -549,22 +549,23 @@
     <script src="Build/UnityLoader.js"></script>
     <style>
         html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100dvh;
-            overflow: hidden; background: #000;
-            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0; padding: 0; width: 100%; height: 100dvh;
+            background: #000; overflow: hidden;
+            font-family: sans-serif;
         }
 
-        /* L'OVERLAY : Priorité absolue avec z-index et interception des clics */
+        /* L'OVERLAY : On utilise 'fixed' et on s'assure qu'il n'y a RIEN au-dessus */
         #loading-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100dvh;
             background: #000;
-            z-index: 10000 !important;
+            z-index: 2147483647 !important; /* Valeur max possible en CSS */
             display: flex;
             justify-content: center;
             align-items: center;
-            pointer-events: auto !important; /* Force l'interception des clics */
+            pointer-events: all !important;
+            touch-action: none; /* Empêche les gestes de passer au travers */
         }
 
         #loading-bg {
@@ -574,76 +575,59 @@
         }
 
         #ui-container {
-            width: 85%;
-            max-width: 300px;
+            width: 80%; max-width: 300px;
+            z-index: 2147483647;
             text-align: center;
         }
 
+        /* Style Épuré Noir */
         input, select {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px; /* Important pour éviter le zoom iOS */
+            width: 100%; padding: 15px; margin: 10px 0;
+            background: #111; border: 1px solid #333;
+            color: #fff; font-size: 16px; border-radius: 0;
+            box-sizing: border-box; outline: none;
             -webkit-appearance: none;
         }
 
         button#start-button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
+            width: 100%; padding: 15px; margin-top: 15px;
+            background: #fff; color: #000;
+            border: none; font-weight: bold; cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
         }
 
-        button:disabled { opacity: 0.3; cursor: not-allowed; }
+        button:disabled { background: #222; color: #444; }
 
-        /* BOUTON PLEIN ÉCRAN : Visible en bas à droite */
+        /* Bouton Fullscreen - Toujours visible en bas à droite */
         #fs-button {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 5000; /* Sous l'overlay, mais au-dessus du jeu */
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #fff;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 10px;
-            backdrop-filter: blur(5px);
+            bottom: 15px; right: 15px;
+            z-index: 1000; /* Visible une fois l'overlay caché */
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #fff; padding: 8px 12px;
+            font-size: 10px; cursor: pointer;
         }
 
-        #unityContainer { width: 100vw; height: 100dvh; z-index: 1; }
+        #unityContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
     </style>
 </head>
 
 <body>
-    <!-- Le bouton Fullscreen est ici, en dehors de l'overlay -->
     <button id="fs-button" onclick="toggleFullScreen()">FULLSCREEN</button>
 
     <div id="loading-overlay">
         <img src="TemplateData/background_compressed.png" id="loading-bg">
         <div id="ui-container">
-            <input type="text" id="username" placeholder="Entrez votre nom">
+            <input type="text" id="username" placeholder="NOM D'ÂME">
             <input type="date" id="birthdate">
             <select id="gender">
-                <option value="" disabled selected>Genre</option>
-                <option value="Homme">Homme</option>
-                <option value="Femme">Femme</option>
-                <option value="Autre">Autre</option>
+                <option value="" disabled selected>GENRE</option>
+                <option value="Homme">HOMME</option>
+                <option value="Femme">FEMME</option>
+                <option value="Autre">AUTRE</option>
             </select>
-            <p id="loading-status" style="color: #666; font-size: 11px; margin-top: 20px;">CHARGEMENT...</p>
+            <p id="loading-status" style="color:#555; font-size:10px; margin-top:15px;">CHARGEMENT...</p>
             <button id="start-button" disabled onclick="launchGame()">COMMENCER</button>
         </div>
     </div>
@@ -651,21 +635,20 @@
     <div id="unityContainer"></div>
 
     <script>
-        // 1. Bloquer les alertes Unity qui volent le focus
-        window.alert = function() { return true; };
-
-        // 2. Initialisation de Unity
+        // 1. Désactivation totale du vol de focus par Unity au démarrage
         var gameInstance = UnityLoader.instantiate("unityContainer", "Build/4-SOUL.json", {
             onProgress: function(instance, progress) {
-                var status = document.getElementById("loading-status");
                 var btn = document.getElementById("start-button");
-                status.innerHTML = "CHARGEMENT : " + Math.round(progress * 100) + "%";
+                document.getElementById("loading-status").innerHTML = "SYNC: " + Math.round(progress * 100) + "%";
                 
                 if (progress >= 1) {
-                    status.innerHTML = "PRÊT";
+                    document.getElementById("loading-status").innerHTML = "SYSTÈME PRÊT";
                     btn.disabled = false;
                     
-                    // CRUCIAL : Une fois chargé, on force Unity à lâcher le clavier
+                    // ON COUPE LA CAPTURE CLAVIER DE UNITY
+                    if (instance.container) {
+                        instance.container.style.pointerEvents = "none"; // Unity devient "transparent" aux clics
+                    }
                     if (typeof WebGLInput !== "undefined") {
                         WebGLInput.captureAllKeyboardInput = false;
                     }
@@ -673,44 +656,40 @@
             }
         });
 
-        // 3. Empêcher Unity de reprendre le focus quand on clique sur les champs
-        document.querySelectorAll('input, select').forEach(element => {
-            element.addEventListener('mousedown', function(e) {
-                e.stopPropagation(); // Empêche l'événement de descendre vers Unity
-            }, true);
-            element.addEventListener('focus', function() {
-                if (typeof WebGLInput !== "undefined") WebGLInput.captureAllKeyboardInput = false;
-            });
-        });
-
+        // 2. Fonction de lancement
         function launchGame() {
-            var user = document.getElementById("username").value;
-            var birth = document.getElementById("birthdate").value;
-            var gen = document.getElementById("gender").value;
+            var u = document.getElementById("username").value;
+            var b = document.getElementById("birthdate").value;
+            var g = document.getElementById("gender").value;
 
-            if (!user || !birth || !gen) {
-                alert("Veuillez remplir tous les champs.");
-                return;
+            if (!u || !b || !g) return;
+
+            var payload = JSON.stringify({username: u, birthdate: b, gender: g});
+            gameInstance.SendMessage('ReceiverObject', 'ReceiveUserData', payload);
+
+            // ON REND LE CONTRÔLE À UNITY
+            var container = document.getElementById("unityContainer");
+            container.style.pointerEvents = "auto"; 
+            if (typeof WebGLInput !== "undefined") {
+                WebGLInput.captureAllKeyboardInput = true;
             }
 
-            var data = {username: user, birthdate: birth, gender: gen};
-            gameInstance.SendMessage('ReceiverObject', 'ReceiveUserData', JSON.stringify(data));
-
-            // On rend le clavier à Unity avant de fermer
-            if (typeof WebGLInput !== "undefined") WebGLInput.captureAllKeyboardInput = true;
-            
             document.getElementById("loading-overlay").style.display = "none";
         }
 
+        // 3. Plein écran
         function toggleFullScreen() {
-            var container = document.body;
             if (!document.fullscreenElement) {
-                if (container.requestFullscreen) container.requestFullscreen();
-                else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+                document.documentElement.requestFullscreen();
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
             }
         }
+
+        // 4. Correction Clave : On force le focus sur les inputs si on clique dessus
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('click', function() { this.focus(); });
+        });
     </script>
 </body>
 </html>
