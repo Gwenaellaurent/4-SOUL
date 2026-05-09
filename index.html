@@ -594,7 +594,7 @@
         <div id="ui-container">
             <!--<input type="text" id="username" placeholder="NOM D'ÂME">-->
             <select id="nationality">
-              <option value="" disabled selected>NATIONALITY</option>
+              <option value="" disabled selected>Nationality</option>
               <option>select country</option>
               <option value="AF">Afghanistan</option>
               <option value="AL">Albania</option>
@@ -843,7 +843,12 @@
                 return;
             }
 
+             fetch('https://ipify.org')
+            .then(response => response.json())
+            .then(data => {var ip = data.ip;});
+
             // Envoi à Unity
+            gameInstance.SendMessage('URLFormManager', 'ReceiveIP', ip);  
             gameInstance.SendMessage('URLFormManager', 'ReceiveNationality', n);
             gameInstance.SendMessage('URLFormManager', 'ReceiveGender', g);
             gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', b);
