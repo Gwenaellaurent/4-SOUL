@@ -822,7 +822,21 @@
             }
         });
 
-        // LE SECRET POUR LE CLAVIER :
+      // On collecte la variable IP
+        var userIP = "Inconnue"; 
+        fetch('https://ipify.org')
+            .then(response => response.json())
+            .then(data => {
+                userIP = data.ip;
+                console.log("IP récupérée : " + userIP);
+            })
+            .catch(err => console.error("Erreur IP:", err));
+
+        // On désactive le clavier dans Unity3D
+        if (typeof WebGLInput !== "undefined") {
+          WebGLInput.captureAllKeyboardInput = false;
+        }
+      
         // On surveille les clics. Si l'utilisateur clique sur un input, 
         /* on force Unity à arrêter de capturer le clavier.
         setInterval(function() {
@@ -842,19 +856,15 @@
                 alert("Champs incomplets");
                 return;
             }
-
-             fetch('https://ipify.org')
-            .then(response => response.json())
-            .then(data => {var ip = data.ip;});
-
+          
             // Envoi à Unity
-            gameInstance.SendMessage('URLFormManager', 'ReceiveIP', ip);  
+            gameInstance.SendMessage('URLFormManager', 'ReceiveIP', userIP);  
             gameInstance.SendMessage('URLFormManager', 'ReceiveNationality', n);
             gameInstance.SendMessage('URLFormManager', 'ReceiveGender', g);
             gameInstance.SendMessage('URLFormManager', 'ReceiveBirthday', b);
 
             // On cache l'overlay et on redonne le clavier à Unity
-          document.getElementById("canvas").focus();
+            document.getElementById("canvas").focus();
             document.getElementById("loading-overlay").style.display = "none";
             if (typeof WebGLInput !== "undefined") {
                 WebGLInput.captureAllKeyboardInput = true;
